@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: playground-app
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: playground-app
+  template:
+    metadata:
+      labels:
+        app: playground-app
+    spec:
+      containers:
+      - name: playground-app
+        image: hashicorp/http-echo
+        args:
+          - "-text=Hello from App V1"
+        ports:
+        - containerPort: 5678
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: playground-service
+  namespace: dev
+spec:
+  selector:
+    app: playground-app
+  ports:
+    - protocol: TCP
+      port: 8888
+      targetPort: 5678
